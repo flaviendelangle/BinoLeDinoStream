@@ -1,0 +1,13 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "webextensions": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "semi": 2
+  }
+}

@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "eslint": "^5.1.0",
+    "eslint-plugin-react": "^7.10.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "twitch-helix": "^1.0.7"
   },
   "scripts": {
     "start": "react-scripts start",
