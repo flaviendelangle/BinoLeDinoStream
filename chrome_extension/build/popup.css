@@ -1,0 +1,40 @@
+body {
+    font-size: 100%;
+    margin: 0;
+    width: 18rem;
+    background-color: ghostwhite;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Main section of the popup */
+section {
+    flex-basis: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+section .message {
+    padding: 0.5rem;
+    text-align: center;
+    user-select: none;
+}
+
+section img {
+    padding: 0.3rem 0.3rem 0 0.3rem;
+}
+
+/* Icon bar */
+nav {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.2rem 0;
+    background-color: #424242;
+}
+
+nav img {
+    height: 32px;
+    width: 32px;
+}

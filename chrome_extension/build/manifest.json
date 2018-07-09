@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Today I Read",
+  "description": "This extension collects the articles you've read for the day",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icons/56x56/BinoCry.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["app.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
+}
