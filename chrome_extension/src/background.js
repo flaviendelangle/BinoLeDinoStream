@@ -46,7 +46,7 @@ function main() {
       stream: data[0],
       ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT,
     };
-    chrome.browserAction.setIcon({ path: currentContent.src });
+    chrome.browserAction.setIcon({ path: currentContent.ui.src });
     sendStatus();
   });
 }

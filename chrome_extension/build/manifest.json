@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Bino le Dino",
   "description": "Informations sur le stream de binoledino",
-  "version": "1.0",
+  "version": "1.0.1",
   "icons": {
     "56": "icons/56x56/BinoWave.png"
   },

@@ -56,7 +56,7 @@
 	
 	var _types = __webpack_require__(2);
 	
-	var API_CLIENT_ID = "047hyh2gfli6kv04oeuz4idpx4bzir";
+	var API_CLIENT_ID = '047hyh2gfli6kv04oeuz4idpx4bzir';
 	
 	var ONLINE_CONTENT = {
 	  message: 'BinoLeDino est en ligne',
@@ -105,7 +105,7 @@
 	      stream: data[0],
 	      ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT
 	    };
-	    chrome.browserAction.setIcon({ path: currentContent.src });
+	    chrome.browserAction.setIcon({ path: currentContent.ui.src });
 	    sendStatus();
 	  });
 	}

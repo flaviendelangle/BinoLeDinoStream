@@ -57,10 +57,8 @@
 	var _types = __webpack_require__(2);
 	
 	function updateUI(_ref) {
-	  var ui = _ref.ui,
-	      stream = _ref.stream;
+	  var ui = _ref.ui;
 	
-	  console.log(stream);
 	  document.querySelector('.stream_status').innerHTML = '\n    <div class="message">' + ui.message + '</div>\n    <img src="' + ui.src + '" />\n  ';
 	}
 	
@@ -68,7 +66,6 @@
 	  var type = _ref2.type,
 	      value = _ref2.value;
 	
-	  console.log(type);
 	  if (type === _types.SEND_STREAM_STATUS) {
 	    updateUI(value);
 	  }
@@ -76,8 +73,6 @@
 	});
 	
 	chrome.runtime.sendMessage({ type: _types.GET_STREAM_STATUS });
-	
-	console.log('LOADED UI');
 
 /***/ }),
 /* 2 */
@@ -100,7 +95,7 @@
 	
 	var _types = __webpack_require__(2);
 	
-	var API_CLIENT_ID = "047hyh2gfli6kv04oeuz4idpx4bzir";
+	var API_CLIENT_ID = '047hyh2gfli6kv04oeuz4idpx4bzir';
 	
 	var ONLINE_CONTENT = {
 	  message: 'BinoLeDino est en ligne',
@@ -149,7 +144,7 @@
 	      stream: data[0],
 	      ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT
 	    };
-	    chrome.browserAction.setIcon({ path: currentContent.src });
+	    chrome.browserAction.setIcon({ path: currentContent.ui.src });
 	    sendStatus();
 	  });
 	}
