@@ -1,34 +1,29 @@
+import { GET_STREAM_STATUS } from './types';
+
+
 const API_CLIENT_ID = "047hyh2gfli6kv04oeuz4idpx4bzir";
 
 const ONLINE_CONTENT = {
   message: 'BinoLeDino est en ligne',
   src: 'icons/112x112/BinoWave.png',
-}
+};
 
 const OFFLINE_CONTENT = {
   message: 'Le live est fini :(',
   src: 'icons/112x112/BinoCry.png',
-}
+};
 
-const STREAM_NAME = 'zerator' //'binoledino'
+const STREAM_NAME = 'binoledino';
 
-const API_ENDPOINT = `https://api.twitch.tv/helix/streams?user_login=${STREAM_NAME}`
+const API_ENDPOINT = `https://api.twitch.tv/helix/streams?user_login=${STREAM_NAME}`;
 
-const REQUEST_INTERVAL = 100000000
+const REQUEST_INTERVAL = 60000;
+
+let currentContent = OFFLINE_CONTENT
 
 function updateUI(isOnline = false) {
-  console.log('OH')
-  const content = isOnline ? ONLINE_CONTENT : OFFLINE_CONTENT
-  chrome.browserAction.setIcon({ path: content.src })
-
-  if (document.querySelectorAll('section').length > 0) {
-    /*
-    document.querySelector('section').innerHTML = `
-      <div class="message">${content.message}</div>
-      <img src="${content.src}" />
-    `;
-    */
-  }
+  currentContent = isOnline ? ONLINE_CONTENT : OFFLINE_CONTENT
+  chrome.browserAction.setIcon({ path: currentContent.src })
 }
 
 function getStreamStatus() {
@@ -37,7 +32,6 @@ function getStreamStatus() {
 
   return fetch(API_ENDPOINT, { headers }).then(res => res.json())
 }
-
 
 function main() {
   getStreamStatus().then(({ data }) => {
@@ -49,3 +43,12 @@ function main() {
 
 
 main()
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request === GET_STREAM_STATUS) {
+    sendResponse(currentContent);
+  } else {
+    sendResponse(null);
+}
+  return true;
+});

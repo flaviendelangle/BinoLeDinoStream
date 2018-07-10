@@ -45,22 +45,39 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(2);
+	module.exports = __webpack_require__(3);
 
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	console.log('HEY 2');
+	var _types = __webpack_require__(2);
+	
+	chrome.runtime.sendMessage(_types.GET_STREAM_STATUS, function (content) {
+	  document.querySelector('.stream_status').innerHTML = '\n    <div class="message">' + content.message + '</div>\n    <img src="' + content.src + '" />\n  ';
+	});
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
 	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var GET_STREAM_STATUS = exports.GET_STREAM_STATUS = 'get_stream_status';
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _types = __webpack_require__(2);
 	
 	var API_CLIENT_ID = "047hyh2gfli6kv04oeuz4idpx4bzir";
 	
@@ -74,23 +91,19 @@
 	  src: 'icons/112x112/BinoCry.png'
 	};
 	
-	var STREAM_NAME = 'zerator'; //'binoledino'
+	var STREAM_NAME = 'binoledino';
 	
 	var API_ENDPOINT = 'https://api.twitch.tv/helix/streams?user_login=' + STREAM_NAME;
 	
-	var REQUEST_INTERVAL = 100000000;
+	var REQUEST_INTERVAL = 60000;
+	
+	var currentContent = OFFLINE_CONTENT;
 	
 	function updateUI() {
 	  var isOnline = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 	
-	  console.log('OH');
-	  var content = isOnline ? ONLINE_CONTENT : OFFLINE_CONTENT;
-	  chrome.browserAction.setIcon({ path: content.src });
-	
-	  if (document.querySelectorAll('section').length > 0) {
-	    console.log('I UPDATE');
-	    document.querySelector('section').innerHTML = '\n      <div class="message">' + content.message + '</div>\n      <img src="' + content.src + '" />\n    ';
-	  }
+	  currentContent = isOnline ? ONLINE_CONTENT : OFFLINE_CONTENT;
+	  chrome.browserAction.setIcon({ path: currentContent.src });
 	}
 	
 	function getStreamStatus() {
@@ -113,6 +126,15 @@
 	}
 	
 	main();
+	
+	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	  if (request === _types.GET_STREAM_STATUS) {
+	    sendResponse(currentContent);
+	  } else {
+	    sendResponse(null);
+	  }
+	  return true;
+	});
 
 /***/ })
 /******/ ]);
