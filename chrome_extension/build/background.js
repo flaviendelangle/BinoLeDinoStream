@@ -74,13 +74,17 @@
 	
 	var REQUEST_INTERVAL = 60000;
 	
-	var currentContent = OFFLINE_CONTENT;
+	var currentContent = {
+	  ui: OFFLINE_CONTENT,
+	  stream: undefined
+	};
 	
-	function updateUI() {
-	  var isOnline = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	
-	  currentContent = isOnline ? ONLINE_CONTENT : OFFLINE_CONTENT;
-	  chrome.browserAction.setIcon({ path: currentContent.src });
+	function sendStatus() {
+	  chrome.runtime.sendMessage({
+	    type: _types.SEND_STREAM_STATUS,
+	    value: currentContent
+	  });
+	  return currentContent;
 	}
 	
 	function getStreamStatus() {
@@ -97,18 +101,22 @@
 	    var data = _ref.data;
 	
 	    setTimeout(main, REQUEST_INTERVAL);
-	    updateUI(data.length > 0);
-	    console.log(data.length ? 'ONLINE' : 'ONLINE');
+	    currentContent = {
+	      stream: data[0],
+	      ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT
+	    };
+	    chrome.browserAction.setIcon({ path: currentContent.src });
+	    sendStatus();
 	  });
 	}
 	
 	main();
 	
-	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	  if (request === _types.GET_STREAM_STATUS) {
-	    sendResponse(currentContent);
-	  } else {
-	    sendResponse(null);
+	chrome.runtime.onMessage.addListener(function (_ref2) {
+	  var type = _ref2.type;
+	
+	  if (type === _types.GET_STREAM_STATUS) {
+	    sendStatus();
 	  }
 	  return true;
 	});
@@ -123,6 +131,8 @@
 	  value: true
 	});
 	var GET_STREAM_STATUS = exports.GET_STREAM_STATUS = 'get_stream_status';
+	
+	var SEND_STREAM_STATUS = exports.SEND_STREAM_STATUS = 'send_stream_status';
 
 /***/ })
 /******/ ]);

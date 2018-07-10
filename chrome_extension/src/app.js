@@ -1,9 +1,18 @@
-import { GET_STREAM_STATUS } from './types'
+import { GET_STREAM_STATUS, SEND_STREAM_STATUS } from './types';
 
 
-chrome.runtime.sendMessage(GET_STREAM_STATUS, (content) => {
+function updateUI({ ui }) {
   document.querySelector('.stream_status').innerHTML = `
-    <div class="message">${content.message}</div>
-    <img src="${content.src}" />
+    <div class="message">${ui.message}</div>
+    <img src="${ui.src}" />
   `;
+}
+
+chrome.runtime.onMessage.addListener(({ type, value }) => {
+  if (type === SEND_STREAM_STATUS) {
+    updateUI(value);
+  }
+  return true;
 });
+
+chrome.runtime.sendMessage({ type: GET_STREAM_STATUS });

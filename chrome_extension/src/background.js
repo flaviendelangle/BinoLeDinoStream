@@ -1,7 +1,7 @@
-import { GET_STREAM_STATUS } from './types';
+import { GET_STREAM_STATUS, SEND_STREAM_STATUS } from './types';
 
 
-const API_CLIENT_ID = "047hyh2gfli6kv04oeuz4idpx4bzir";
+const API_CLIENT_ID = '047hyh2gfli6kv04oeuz4idpx4bzir';
 
 const ONLINE_CONTENT = {
   message: 'BinoLeDino est en ligne',
@@ -19,36 +19,44 @@ const API_ENDPOINT = `https://api.twitch.tv/helix/streams?user_login=${STREAM_NA
 
 const REQUEST_INTERVAL = 60000;
 
-let currentContent = OFFLINE_CONTENT
+let currentContent = {
+  ui: OFFLINE_CONTENT,
+  stream: undefined,
+};
 
-function updateUI(isOnline = false) {
-  currentContent = isOnline ? ONLINE_CONTENT : OFFLINE_CONTENT
-  chrome.browserAction.setIcon({ path: currentContent.src })
+function sendStatus() {
+  chrome.runtime.sendMessage({
+    type: SEND_STREAM_STATUS,
+    value: currentContent,
+  });
+  return currentContent;
 }
 
 function getStreamStatus() {
   const headers = new Headers();
   headers.append('Client-ID', API_CLIENT_ID);
 
-  return fetch(API_ENDPOINT, { headers }).then(res => res.json())
+  return fetch(API_ENDPOINT, { headers }).then(res => res.json());
 }
 
 function main() {
   getStreamStatus().then(({ data }) => {
-    setTimeout(main, REQUEST_INTERVAL)
-    updateUI(data.length > 0)
-    console.log(data.length ? 'ONLINE' : 'ONLINE')
-  })
+    setTimeout(main, REQUEST_INTERVAL);
+    currentContent = {
+      stream: data[0],
+      ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT,
+    };
+    chrome.browserAction.setIcon({ path: currentContent.src });
+    sendStatus();
+  });
 }
 
 
-main()
+main();
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request === GET_STREAM_STATUS) {
-    sendResponse(currentContent);
-  } else {
-    sendResponse(null);
-}
+chrome.runtime.onMessage.addListener(({ type }) => {
+  if (type === GET_STREAM_STATUS) {
+    sendStatus();
+  }
   return true;
 });
