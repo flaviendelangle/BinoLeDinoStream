@@ -39,6 +39,12 @@ function getStreamStatus() {
   return fetch(API_ENDPOINT, { headers }).then(res => res.json());
 }
 
+function updateIcon(path) {
+  if (chrome && chrome.browserAction && chrome.browserAction.setIcon) {
+    chrome.browserAction.setIcon({ path });
+  }
+}
+
 function main() {
   getStreamStatus().then(({ data }) => {
     setTimeout(main, REQUEST_INTERVAL);
@@ -46,7 +52,7 @@ function main() {
       stream: data[0],
       ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT,
     };
-    chrome.browserAction.setIcon({ path: currentContent.ui.src });
+    updateIcon(currentContent.ui.src);
     sendStatus();
   });
 }

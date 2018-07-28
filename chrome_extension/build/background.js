@@ -96,6 +96,12 @@
 	  });
 	}
 	
+	function updateIcon(path) {
+	  if (chrome && chrome.browserAction && chrome.browserAction.setIcon) {
+	    chrome.browserAction.setIcon({ path: path });
+	  }
+	}
+	
 	function main() {
 	  getStreamStatus().then(function (_ref) {
 	    var data = _ref.data;
@@ -105,7 +111,7 @@
 	      stream: data[0],
 	      ui: data.length > 0 ? ONLINE_CONTENT : OFFLINE_CONTENT
 	    };
-	    chrome.browserAction.setIcon({ path: currentContent.ui.src });
+	    updateIcon(currentContent.ui.src);
 	    sendStatus();
 	  });
 	}
